@@ -8,6 +8,7 @@ using VRE.Vridge.API.Client.Messages;
 using VRE.Vridge.API.Client.Proxy;
 using VRE.Vridge.API.DesktopTester.Service.Controller;
 using VRE.Vridge.API.DesktopTester.Service.HeadTracking;
+//using VRE.Vridge.API.DesktopTester.Service.PSMovePose;
 
 namespace VRE.Vridge.API.DesktopTester.ViewModel
 {
@@ -28,6 +29,12 @@ namespace VRE.Vridge.API.DesktopTester.ViewModel
         private double yaw;
         private double pitch;
         private double roll;
+
+        // Orientation currently set by PSMove controller
+        private double qw;
+        private double qx;
+        private double qy;
+        private double qz;
 
         // Analog states currently as set by sliders in controller panel
         private double analogX;
@@ -58,6 +65,7 @@ namespace VRE.Vridge.API.DesktopTester.ViewModel
             {
                 {TrackingType.Position, "Send position only"},
                 {TrackingType.PositionAndRotation, "Send position and rotation"},
+                {TrackingType.PSMovePose, "Send PSMove controller pose"},
                 {TrackingType.SyncOffset, "Send synchronous offset"},
                 {TrackingType.AsyncOffset, "Send asynchronous offset"},
             };
@@ -217,6 +225,61 @@ namespace VRE.Vridge.API.DesktopTester.ViewModel
             set
             {
                 roll = value;
+                RaisePropertyChanged();
+                OnRotationChanged();
+            }
+        }
+
+        public PSMoveServiceClientAPI::PSMQuatf OrientationQuat
+        {
+            get { return qw; }
+            set
+            {
+                qw = value;
+                RaisePropertyChanged();
+                OnRotationChanged();
+            }
+        }
+
+        public double OrientationW
+        {
+            get { return qw; }
+            set
+            {
+                qw = value;
+                RaisePropertyChanged();
+                OnRotationChanged();
+            }
+        }
+
+        public double OrientationX
+        {
+            get { return qx; }
+            set
+            {
+                qx = value;
+                RaisePropertyChanged();
+                OnRotationChanged();
+            }
+        }
+
+        public double OrientationY
+        {
+            get { return qy; }
+            set
+            {
+                qy = value;
+                RaisePropertyChanged();
+                OnRotationChanged();
+            }
+        }
+
+        public double OrientationZ
+        {
+            get { return qz; }
+            set
+            {
+                qz = value;
                 RaisePropertyChanged();
                 OnRotationChanged();
             }
@@ -390,6 +453,11 @@ namespace VRE.Vridge.API.DesktopTester.ViewModel
                     break;
                 case TrackingType.PositionAndRotation:
                     headTrackingService?.SendRotationAndPosition(Yaw, Pitch, Roll, PositionX, PositionY, PositionZ);
+                    break;
+                case TrackingType.PSMovePose:
+                    headTrackingService?.SendQuatRotationAndPosition(
+                        OrientationW, OrientationX, OrientationY, OrientationZ,
+                        PositionX, PositionY, PositionZ);
                     break;
                 case TrackingType.SyncOffset:
                     headTrackingService?.UpdateOffsetMatrix(Yaw, Pitch, Roll, PositionX, PositionY, PositionZ);

@@ -6,7 +6,8 @@
     public enum TrackingType
     {       
         Position,
-        PositionAndRotation,        
+        PositionAndRotation,       
+        PSMovePose, 
         SyncOffset,
         AsyncOffset
     }

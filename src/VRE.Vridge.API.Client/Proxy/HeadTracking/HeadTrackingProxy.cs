@@ -46,7 +46,18 @@ namespace VRE.Vridge.API.Client.Proxy.HeadTracking
             var reply = SendMessage(request);
 
             return reply.ReplyCode == (int)HeadTrackingResponse.Response.AcceptedYourData;
-        }        
+        }
+
+        /// <summary>
+        /// Sets position and quaternion rotation and returns true if the value was accepted. 
+        /// </summary>        
+        public bool SetQuatRotationAndPosition(float qw, float qx, float qy, float qz, float x, float y, float z)
+        {
+            var request = HeadTrackingRequest.CreateQuatRotationPositionVectorPacket(qw, qx, qy, qz, x, y, z);
+            var reply = SendMessage(request);
+
+            return reply.ReplyCode == (int)HeadTrackingResponse.Response.AcceptedYourData;
+        }
 
         /// <summary>
         /// Sets rotational offset that will be applied to each mobile pose. Use radians.

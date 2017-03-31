@@ -164,6 +164,26 @@ namespace VRE.Vridge.API.Client.Messages.v1.HeadTracking.Requests
         }
 
         /// <summary>
+        /// Creates a packet that overrides VRidge data with full pose (quaternion rotation and position).
+        /// Rotation uses radians.
+        /// </summary>        
+        /// <returns></returns>
+        public static HeadTrackingRequest CreateQuatRotationPositionVectorPacket(float qw, float qx, float qy, float qz, float x, float y, float z)
+        {
+            var packet = new HeadTrackingRequest()
+            {
+                Version = CurrentVersion,
+                TaskType = (int)Task.SendQuatRotationAndPosition,
+                Data = new byte[64],
+                DataLength = 28
+            };
+
+            Buffer.BlockCopy(new[] { qx, qy, qz, qw, x, y, z }, 0, packet.Data, 0, 28);
+
+            return packet;
+        }
+
+        /// <summary>
         /// Creates a packet that overrides VRidge data with full pose (rotation and position).
         /// Matrix is stored as column-major float flat array.
         /// </summary>        
